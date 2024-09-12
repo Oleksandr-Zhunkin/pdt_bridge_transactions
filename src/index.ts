@@ -14,11 +14,8 @@ if (
   throw new Error("Not all environment variables are setting");
 }
 
-// const provider = new ethers.JsonRpcProvider(
-//   `https://mainnet.infura.io/v3/${API_KEY}`
-// );
 const provider = new ethers.JsonRpcProvider(
-  `https://sepolia.infura.io/v3/${API_KEY}`
+  `https://mainnet.infura.io/v3/${API_KEY}`
 );
 
 const wallet = new ethers.Wallet(PRIVATE_KEY, provider);
@@ -60,10 +57,9 @@ async function sendFundsByContract(
 
 async function main(contract: string) {
   try {
-    const amount = ethers.parseEther("0.0001");
+    const amount = ethers.parseEther("0.000001");
 
     await sendFundsByContract(contract, amount);
-    console.log("Transaction completed successfully.");
   } catch (error) {
     console.error("Error in main function:", error);
   } finally {
