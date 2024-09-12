@@ -1,5 +1,5 @@
 import { ethers } from "ethers";
-import readline from "readline";
+
 import "dotenv/config";
 
 const { PRIVATE_KEY, API_KEY, CONTRACT_ETH_TO_BASE, CONTRACT_BASE_TO_ETH } =
@@ -39,11 +39,6 @@ const bridgeContractBaseToEth = new ethers.Contract(
   wallet
 );
 
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout,
-});
-
 async function sendFundsByContract(
   contractAddress: string,
   amount: ethers.BigNumberish
@@ -54,10 +49,6 @@ async function sendFundsByContract(
     const balance = await provider.getBalance(wallet.address);
     console.log(`Balance: ${ethers.formatEther(balance)} ETH`);
 
-    if (Number(balance) < Number(amount)) {
-      console.log("You have not enough balance");
-    }
-
     const tx = await contract.sendFunds(wallet.address, amount);
     console.log(`Transaction hash: ${tx.hash}`);
     const receipt = await tx.wait();
@@ -67,40 +58,19 @@ async function sendFundsByContract(
   }
 }
 
-async function askQuestion(query: string): Promise<string> {
-  return new Promise((resolve) => rl.question(query, resolve));
-}
-
-async function main() {
+async function main(contract: string) {
   try {
-    const contractChoice = await askQuestion(
-      "Choose the contract to send funds to (1 for ETH_TO_BASE, 2 for BASE_TO_ETH): "
-    );
-    let contractAddress: string;
+    const amount = ethers.parseEther("0.0001");
 
-    if (contractChoice === "1") {
-      contractAddress = CONTRACT_ETH_TO_BASE!;
-    } else if (contractChoice === "2") {
-      contractAddress = CONTRACT_BASE_TO_ETH!;
-    } else {
-      console.error("Invalid choice. Exiting...");
-      rl.close();
-      return;
-    }
-
-    const amountStr = await askQuestion("Enter the amount to send: ");
-    const amount = ethers.parseEther(amountStr);
-
-    await sendFundsByContract(contractAddress, amount);
+    await sendFundsByContract(contract, amount);
     console.log("Transaction completed successfully.");
   } catch (error) {
     console.error("Error in main function:", error);
   } finally {
-    rl.close();
   }
 }
 
-main().catch((error) => {
+main(CONTRACT_ETH_TO_BASE).catch((error) => {
   console.error(error);
   process.exit(1);
 });
