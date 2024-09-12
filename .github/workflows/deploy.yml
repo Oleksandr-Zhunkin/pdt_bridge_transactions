@@ -22,7 +22,7 @@ jobs:
         run: npm install
 
       - name: Run script
-        run: node your-script-file.js
+        run: npm start
         env:
           PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
           API_KEY: ${{ secrets.API_KEY }}
