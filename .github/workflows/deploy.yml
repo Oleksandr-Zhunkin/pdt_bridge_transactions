@@ -1,0 +1,30 @@
+name: Run Node.js script
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run script
+        run: node your-script-file.js
+        env:
+          PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+          API_KEY: ${{ secrets.API_KEY }}
+          CONTRACT_ETH_TO_BASE: ${{ secrets.CONTRACT_ETH_TO_BASE }}
+          CONTRACT_BASE_TO_ETH: ${{ secrets.CONTRACT_BASE_TO_ETH }}
