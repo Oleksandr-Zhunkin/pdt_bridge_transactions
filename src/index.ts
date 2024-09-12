@@ -11,7 +11,7 @@ if (
   !CONTRACT_ETH_TO_BASE ||
   !CONTRACT_BASE_TO_ETH
 ) {
-  throw new Error("Not all environment variables are set");
+  throw new Error("Not all environment variables are setting");
 }
 
 // const provider = new ethers.JsonRpcProvider(
